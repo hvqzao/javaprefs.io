@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -47,12 +48,18 @@ public class Default {
 		interfaceCustomization();
 	}
 
+	public static ImageIcon getResourceIcon(String res) {
+		return new ImageIcon(new ImageIcon(Default.class.getResource(res)).getImage().getScaledInstance(13, 13,
+				java.awt.Image.SCALE_SMOOTH));
+	}
+
 	private void interfaceCustomization() {
 		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 			if ("Nimbus".equals(info.getName())) {
 				try {
 					UIManager.setLookAndFeel(info.getClassName());
-				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException ex) {
 				}
 				break;
 			}
@@ -69,8 +76,10 @@ public class Default {
 		if (fui == null) {
 			fui = new FontUIResource(new Font("SansSerif", Font.PLAIN, Default.FONT_SIZE));
 		}
-		UIManager.getLookAndFeelDefaults().put("CheckBox.font", new Font(fui.getName(), fui.getStyle(), Default.FONT_SIZE));
-		UIManager.getLookAndFeelDefaults().put("RadioButton.font", new Font(fui.getName(), fui.getStyle(), Default.FONT_SIZE));
+		UIManager.getLookAndFeelDefaults().put("CheckBox.font",
+				new Font(fui.getName(), fui.getStyle(), Default.FONT_SIZE));
+		UIManager.getLookAndFeelDefaults().put("RadioButton.font",
+				new Font(fui.getName(), fui.getStyle(), Default.FONT_SIZE));
 		uidef.put("TabbedPane.backgroundPainter", new BackgroundPainter(Default.BACKGROUND_COLOR));
 		uidef.put("OptionPane.background", BACKGROUND_COLOR_RES);
 		uidef.put("Panel.background", BACKGROUND_COLOR_RES);
@@ -151,8 +160,9 @@ public class Default {
 
 		private static final long serialVersionUID = -2110318394243572252L;
 
-		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-			setPreferredSize(new Dimension((int)getSize().getWidth(),20));
+		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+			setPreferredSize(new Dimension((int) getSize().getWidth(), 20));
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			if (isSelected) {
 				setBackground(Default.HIGHLIGHT_BACKGROUND_COLOR);
