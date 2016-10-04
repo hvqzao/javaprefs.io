@@ -37,255 +37,272 @@ import hvqzao.ui.swing.IconButton;
 
 public class MainWindow extends JFrame {
 
-	private static final long serialVersionUID = -7647347180509524890L;
-	private JComboBox<String> comboBox;
-	private JTextPane textPane;
-	private ActionListener comboBoxActionListener;
-	private IconButton addButton;
-	private IconButton saveButton;
-	private IconButton removeButton;
-	private String origPrefs;
-	private IconButton refreshButton;
-	private Document textPaneDocument;
+    private static final long serialVersionUID = -7647347180509524890L;
+    private JComboBox<String> comboBox;
+    private JTextPane textPane;
+    private ActionListener comboBoxActionListener;
+    private IconButton addButton;
+    private IconButton saveButton;
+    private IconButton removeButton;
+    private String origPrefs;
+    private IconButton refreshButton;
+    private Document textPaneDocument;
 
-	public MainWindow() {
-		super();
-		new Default();
-		ImageIcon refreshIcon = Default.getResourceIcon("/res/icon_refresh.png");
-		ImageIcon addIcon = Default.getResourceIcon("/res/icon_add.png");
-		ImageIcon removeIcon = Default.getResourceIcon("/res/icon_remove.png");
-		ImageIcon saveIcon = Default.getResourceIcon("/res/icon_save.png");
+    private static MainWindow instance;
 
-		JPanel contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		SpringLayout sl_contentPane = new SpringLayout();
-		contentPane.setLayout(sl_contentPane);
+    public static MainWindow getInstance() {
+        if (instance == null) {
+            instance = new MainWindow();
+        }
+        return instance;
+    }
 
-		refreshButton = new IconButton(refreshIcon);
-		refreshButton.setToolTipText("Refresh");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, refreshButton, 1 + 24, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, refreshButton, -2 - 12 - 24 - 2 - 12 - 24 - 12 - 24,
-				SpringLayout.EAST, contentPane);
-		contentPane.add(refreshButton);
+    public MainWindow() {
+        super();
+        initialize();
+    }
 
-		addButton = new IconButton(addIcon);
-		addButton.setToolTipText("Add...");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, addButton, 1 + 24, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, addButton, -2 - 12 - 24 - 12 - 24, SpringLayout.EAST,
-				contentPane);
-		contentPane.add(addButton);
+    private void initialize() {
+        Default.getInstance();
+        ImageIcon refreshIcon = Default.getResourceIcon("/res/icon_refresh.png");
+        ImageIcon addIcon = Default.getResourceIcon("/res/icon_add.png");
+        ImageIcon removeIcon = Default.getResourceIcon("/res/icon_remove.png");
+        ImageIcon saveIcon = Default.getResourceIcon("/res/icon_save.png");
 
-		saveButton = new IconButton(saveIcon);
-		saveButton.setToolTipText("Save (Ctrl+S)");
-		saveButton.setEnabled(false);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, saveButton, 1 + 24, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, saveButton, -12 - 24, SpringLayout.EAST, contentPane);
-		contentPane.add(saveButton);
+        JPanel contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        SpringLayout sl_contentPane = new SpringLayout();
+        contentPane.setLayout(sl_contentPane);
 
-		removeButton = new IconButton(removeIcon);
-		removeButton.setToolTipText("Remove...");
-		removeButton.setEnabled(false);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, removeButton, 1 + 24, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, removeButton, 0, SpringLayout.EAST, contentPane);
-		contentPane.add(removeButton);
+        refreshButton = new IconButton(refreshIcon);
+        refreshButton.setToolTipText("Refresh");
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, refreshButton, 1 + 24, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, refreshButton, -2 - 12 - 24 - 2 - 12 - 24 - 12 - 24,
+                SpringLayout.EAST, contentPane);
+        contentPane.add(refreshButton);
 
-		comboBox = new JComboBox<String>();
-		Default.customizeUiComponent(comboBox);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox, -1, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, comboBox, 0, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, comboBox, -4, SpringLayout.WEST, refreshButton);
-		contentPane.add(comboBox);
+        addButton = new IconButton(addIcon);
+        addButton.setToolTipText("Add...");
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, addButton, 1 + 24, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, addButton, -2 - 12 - 24 - 12 - 24, SpringLayout.EAST,
+                contentPane);
+        contentPane.add(addButton);
 
-		JScrollPane scrollPane = new JScrollPane();
-		Default.customizeUiComponent(scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 5, SpringLayout.SOUTH, comboBox);
-		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, contentPane);
-		contentPane.add(scrollPane);
+        saveButton = new IconButton(saveIcon);
+        saveButton.setToolTipText("Save (Ctrl+S)");
+        saveButton.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, saveButton, 1 + 24, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, saveButton, -12 - 24, SpringLayout.EAST, contentPane);
+        contentPane.add(saveButton);
 
-		textPane = new JTextPane();
-		Default.customizeUiComponent(textPane);
-		textPane.setFont(Default.monotypeFont);
-		scrollPane.setViewportView(textPane);
+        removeButton = new IconButton(removeIcon);
+        removeButton.setToolTipText("Remove...");
+        removeButton.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, removeButton, 1 + 24, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, removeButton, 0, SpringLayout.EAST, contentPane);
+        contentPane.add(removeButton);
 
-		comboBoxDropdownRefresh();
-		comboBoxActionListener = new ActionListener() {
+        comboBox = new JComboBox<String>();
+        Default.customizeUiComponent(comboBox);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox, -1, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, comboBox, 0, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, comboBox, -4, SpringLayout.WEST, refreshButton);
+        contentPane.add(comboBox);
 
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				origPrefs = null;
-				saveButton.setEnabled(false);
-				textPane.setText("");
-				if (comboBox.getSelectedItem().toString().length() > 0) {
-					removeButton.setEnabled(true);
-					Preferences prefs = Preferences.userRoot().node(comboBox.getSelectedItem().toString());
-					try {
-						ByteArrayOutputStream os = new ByteArrayOutputStream();
-						prefs.exportNode((OutputStream) os);
-						String s = os.toString();
-						textPane.setText(s);
-						origPrefs = s;
-					} catch (IOException | BackingStoreException e) {
-						e.printStackTrace();
-					}
-				} else {
-					removeButton.setEnabled(false);
-				}
-			}
-		};
-		comboBox.addActionListener(comboBoxActionListener);
+        JScrollPane scrollPane = new JScrollPane();
+        Default.customizeUiComponent(scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 5, SpringLayout.SOUTH, comboBox);
+        sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, 0, SpringLayout.SOUTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, contentPane);
+        contentPane.add(scrollPane);
 
-		refreshButton.addActionListener(new ActionListener() {
+        textPane = new JTextPane();
+        Default.customizeUiComponent(textPane);
+        textPane.setFont(Default.MONOTYPE_FONT);
+        scrollPane.setViewportView(textPane);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String node = (String) comboBox.getSelectedItem();
-				comboBoxDropdownRefresh();
-				comboBox.setSelectedItem(node);
-			}
-		});
+        comboBoxDropdownRefresh();
+        comboBoxActionListener = new ActionListener() {
 
-		addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                origPrefs = null;
+                saveButton.setEnabled(false);
+                textPane.setText("");
+                if (comboBox.getSelectedItem().toString().length() > 0) {
+                    removeButton.setEnabled(true);
+                    Preferences prefs = Preferences.userRoot().node(comboBox.getSelectedItem().toString());
+                    try {
+                        ByteArrayOutputStream os = new ByteArrayOutputStream();
+                        prefs.exportNode((OutputStream) os);
+                        String s = os.toString();
+                        textPane.setText(s);
+                        origPrefs = s;
+                    } catch (IOException e) {
+                        // nothing
+                    } catch (BackingStoreException e) {
+                        // nothing
+                    }
+                } else {
+                    removeButton.setEnabled(false);
+                }
+            }
+        };
+        comboBox.addActionListener(comboBoxActionListener);
 
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				String node = (String) JOptionPane.showInputDialog(MainWindow.this, "", "Name for new node?",
-						JOptionPane.PLAIN_MESSAGE);
-				if (node != null && node.length() != 0) {
-					Preferences.userRoot().node(node);
-					comboBoxDropdownRefresh();
-					comboBox.setSelectedItem(node);
-				}
-			}
-		});
+        refreshButton.addActionListener(new ActionListener() {
 
-		saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String node = (String) comboBox.getSelectedItem();
+                comboBoxDropdownRefresh();
+                comboBox.setSelectedItem(node);
+            }
+        });
 
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				saveAction();
-			}
-		});
-		
-		removeButton.addActionListener(new ActionListener() {
+        addButton.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				if (JOptionPane.showConfirmDialog(
-						MainWindow.this, "Are you sure you want to recursively remove \""
-								+ comboBox.getSelectedItem().toString() + "\" node?",
-						"Confirmation", JOptionPane.YES_NO_OPTION) == 0) {
-					try {
-						Preferences.userRoot().node(comboBox.getSelectedItem().toString()).removeNode();
-					} catch (BackingStoreException e) {
-						e.printStackTrace();
-					}
-					comboBoxDropdownRefresh();
-				}
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                String node = (String) JOptionPane.showInputDialog(MainWindow.this, "", "Name for new node?",
+                        JOptionPane.PLAIN_MESSAGE);
+                if (node != null && node.length() != 0) {
+                    Preferences.userRoot().node(node);
+                    comboBoxDropdownRefresh();
+                    comboBox.setSelectedItem(node);
+                }
+            }
+        });
 
-		// textPane content edited?
-		textPaneDocument = textPane.getDocument();
-		textPaneDocument.addDocumentListener(new DocumentListener() {
+        saveButton.addActionListener(new ActionListener() {
 
-			@Override
-			public void removeUpdate(DocumentEvent evt) {
-				textPaneUpdateHandler();
-			}
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                saveAction();
+            }
+        });
 
-			@Override
-			public void insertUpdate(DocumentEvent evt) {
-				textPaneUpdateHandler();
-			}
+        removeButton.addActionListener(new ActionListener() {
 
-			@Override
-			public void changedUpdate(DocumentEvent evt) {
-				textPaneUpdateHandler();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                if (JOptionPane.showConfirmDialog(
+                        MainWindow.this, "Are you sure you want to recursively remove \""
+                        + comboBox.getSelectedItem().toString() + "\" node?",
+                        "Confirmation", JOptionPane.YES_NO_OPTION) == 0) {
+                    try {
+                        Preferences.userRoot().node(comboBox.getSelectedItem().toString()).removeNode();
+                    } catch (BackingStoreException e) {
+                        // nothing
+                    }
+                    comboBoxDropdownRefresh();
+                }
+            }
+        });
 
-		// textPane undo capability
-		final UndoManager undo = new UndoManager();
-		Document doc = textPane.getDocument();
-		doc.addUndoableEditListener(new UndoableEditListener() {
-			public void undoableEditHappened(UndoableEditEvent evt) {
-				undo.addEdit(evt.getEdit());
-			}
-		});
-		textPane.getActionMap().put("Undo", new AbstractAction("Undo") {
+        // textPane content edited?
+        textPaneDocument = textPane.getDocument();
+        textPaneDocument.addDocumentListener(new DocumentListener() {
 
-			private static final long serialVersionUID = -529529695064970831L;
+            @Override
+            public void removeUpdate(DocumentEvent evt) {
+                textPaneUpdateHandler();
+            }
 
-			public void actionPerformed(ActionEvent evt) {
-				try {
-					if (undo.canUndo()) {
-						undo.undo();
-					}
-				} catch (CannotUndoException e) {
-				}
-			}
-		});
-		textPane.getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
+            @Override
+            public void insertUpdate(DocumentEvent evt) {
+                textPaneUpdateHandler();
+            }
 
-		// textPane Save (Ctrl+S)
-		KeyStroke ctrlS = KeyStroke.getKeyStroke("control S");
-		textPane.getInputMap().put(ctrlS, new AbstractAction() {
-			
-			private static final long serialVersionUID = -6554064609954416509L;
+            @Override
+            public void changedUpdate(DocumentEvent evt) {
+                textPaneUpdateHandler();
+            }
+        });
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (saveButton.isEnabled()) {
-					saveAction();
-				}
-			}
-		});
-		
-		setTitle("JavaPrefs.IO");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(300, 200, 750, 600);
-		setMinimumSize(new Dimension(300, 200));
-		setLocationRelativeTo(null);
-		setVisible(true);
-	}
+        // textPane undo capability
+        final UndoManager undo = new UndoManager();
+        Document doc = textPane.getDocument();
+        doc.addUndoableEditListener(new UndoableEditListener() {
+            public void undoableEditHappened(UndoableEditEvent evt) {
+                undo.addEdit(evt.getEdit());
+            }
+        });
+        textPane.getActionMap().put("Undo", new AbstractAction("Undo") {
 
-	private void comboBoxDropdownRefresh() {
-		comboBox.removeActionListener(comboBoxActionListener);
-		comboBox.removeAllItems();
-		comboBox.addActionListener(comboBoxActionListener);
-		comboBox.addItem("");
-		try {
-			for (String item : Preferences.userRoot().childrenNames()) {
-				comboBox.addItem(item);
-			}
-		} catch (BackingStoreException e) {
-			e.printStackTrace();
-		}
-	}
+            private static final long serialVersionUID = -529529695064970831L;
 
-	private void textPaneUpdateHandler() {
-		if (origPrefs != null) {
-			boolean changed = textPane.getText().equals(origPrefs);
-			if (saveButton.isEnabled() == changed) {
-				saveButton.setEnabled(!changed);
-			}
-		}
-	}
+            public void actionPerformed(ActionEvent evt) {
+                try {
+                    if (undo.canUndo()) {
+                        undo.undo();
+                    }
+                } catch (CannotUndoException e) {
+                }
+            }
+        });
+        textPane.getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
 
-	private void saveAction() {
-		origPrefs = textPane.getText();
-		InputStream is = new ByteArrayInputStream(origPrefs.getBytes(StandardCharsets.UTF_8));
-		try {
-			Preferences.importPreferences(is);
-		} catch (IOException | InvalidPreferencesFormatException e) {
-			e.printStackTrace();
-		}
-		saveButton.setEnabled(false);
-		String node = (String) comboBox.getSelectedItem();
-		comboBoxDropdownRefresh();
-		comboBox.setSelectedItem(node);
-	}
+        // textPane Save (Ctrl+S)
+        KeyStroke ctrlS = KeyStroke.getKeyStroke("control S");
+        textPane.getInputMap().put(ctrlS, new AbstractAction() {
+
+            private static final long serialVersionUID = -6554064609954416509L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (saveButton.isEnabled()) {
+                    saveAction();
+                }
+            }
+        });
+
+        setTitle("JavaPrefs.IO");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(300, 200, 750, 600);
+        setMinimumSize(new Dimension(300, 200));
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void comboBoxDropdownRefresh() {
+        comboBox.removeActionListener(comboBoxActionListener);
+        comboBox.removeAllItems();
+        comboBox.addActionListener(comboBoxActionListener);
+        comboBox.addItem("");
+        try {
+            for (String item : Preferences.userRoot().childrenNames()) {
+                comboBox.addItem(item);
+            }
+        } catch (BackingStoreException e) {
+            // nothing
+        }
+    }
+
+    private void textPaneUpdateHandler() {
+        if (origPrefs != null) {
+            boolean changed = textPane.getText().equals(origPrefs);
+            if (saveButton.isEnabled() == changed) {
+                saveButton.setEnabled(!changed);
+            }
+        }
+    }
+
+    private void saveAction() {
+        origPrefs = textPane.getText();
+        InputStream is = new ByteArrayInputStream(origPrefs.getBytes(StandardCharsets.UTF_8));
+        try {
+            Preferences.importPreferences(is);
+        } catch (IOException e) {
+            // nothing
+        } catch (InvalidPreferencesFormatException e) {
+            // nothing
+        }
+        saveButton.setEnabled(false);
+        String node = (String) comboBox.getSelectedItem();
+        comboBoxDropdownRefresh();
+        comboBox.setSelectedItem(node);
+    }
 }

@@ -7,7 +7,7 @@ It is using built-in XML import/export functions, making it extermally simple to
 
 ## Download
 
-https://github.com/hvqzao/javaprefs.io/releases/download/v1.0/JavaPrefs.IO.jar
+https://github.com/hvqzao/javaprefs.io/releases/download/v1.1/JavaPrefs.IO.jar
 
 ## License
 
